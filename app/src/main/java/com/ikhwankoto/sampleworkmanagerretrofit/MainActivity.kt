@@ -11,6 +11,18 @@ import com.ikhwankoto.sampleworkmanagerretrofit.workers.NewsWorker
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.TimeUnit
 
+/**
+ * Note for Behavior:
+ *
+ * https://stackoverflow.com/questions/50682061/android-is-workmanager-running-when-app-is-closed
+ *
+ * https://stackoverflow.com/questions/55349488/work-manager-not-working-when-app-is-killed-by-the-user-why
+ * As I found out, the work manager depends on the device manufacturer.
+ * For my case, it is an miui device, which does not allow work manager to work in case
+ * the app is killed or rebooted. The work manager worked when I provided the
+ * application with "autostart permission".
+ * */
+
 class MainActivity : AppCompatActivity() {
 
     var WORKER = "TAG_NEWS_WORKER"
