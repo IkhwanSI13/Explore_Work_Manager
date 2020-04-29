@@ -9,17 +9,17 @@ import androidx.work.WorkerParameters
 import com.ikhwankoto.sampleworkmanagerretrofit.Preference
 import com.ikhwankoto.sampleworkmanagerretrofit.api.ApiClient
 
-class NewsSecondWorker(appContext: Context, workerParams: WorkerParameters) :
+class NewsPeriodicWorker(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {
 
     override fun doWork(): Result {
         Preference().setCountValue(
             applicationContext,
-            (Preference().getCountValue(applicationContext, Preference.tagCountSecondWork) + 1),
-            Preference.tagCountSecondWork
+            (Preference().getCountValue(applicationContext, Preference.tagCountPeriodicWork) + 1),
+            Preference.tagCountPeriodicWork
         )
 
-        Log.e("CheckLog", "do news second work run")
+        Log.e("CheckLog", "do news periodic work run")
         Thread.sleep(5_000)
         try {
             val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()

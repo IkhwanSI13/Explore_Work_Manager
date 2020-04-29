@@ -3,7 +3,9 @@ package com.ikhwankoto.sampleworkmanagerretrofit
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.work.*
+import com.ikhwankoto.sampleworkmanagerretrofit.workers.NewsPeriodicWorker
 import com.ikhwankoto.sampleworkmanagerretrofit.workers.NewsSecondWorker
 import com.ikhwankoto.sampleworkmanagerretrofit.workers.NewsWorker
 import kotlinx.android.synthetic.main.activity_main.*
@@ -11,27 +13,90 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
+    var WORKER = "TAG_NEWS_WORKER"
+    var PERIODIC_WORKER = "TAG_PERIODIC_WORKER"
+
     private lateinit var mWorkManager: WorkManager
-//    private lateinit var mSavedWorkInfo: LiveData<List<WorkInfo>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        mWorkManager = WorkManager.getInstance(this)
 
+        setCount()
+        setPeriodicCount()
+        workListener()
+        onClickBtn()
+    }
+
+    private fun setCount() {
+        val count = Preference().getCountValue(this, Preference.tagCountWork)
+        val countSecondWork = Preference().getCountValue(this, Preference.tagCountSecondWork)
+        tv_counter.text = "Count Work: $count\nCount Second Work: $countSecondWork"
+    }
+
+    private fun setPeriodicCount() {
+        val count = Preference().getCountValue(this, Preference.tagCountPeriodicWork)
+        tv_count_periodic.text = "Count Periodic Work: $count"
+    }
+
+    private fun workListener() {
+        WorkManager.getInstance(this).getWorkInfosForUniqueWorkLiveData(WORKER)
+            .observe(this, Observer { workInfo ->
+                var cond = "Status " + WORKER
+                if (workInfo != null)
+                    for ((index, data) in workInfo.withIndex())
+                        cond += when (data.state) {
+                            WorkInfo.State.RUNNING -> "\n$index - RUNNING"
+                            WorkInfo.State.ENQUEUED -> "\n$index -  ENQUEUED"
+                            WorkInfo.State.FAILED -> "\n$index - FAILED"
+                            WorkInfo.State.BLOCKED -> "\n$index - BLOCKED"
+                            WorkInfo.State.CANCELLED -> "\n$index - CANCELLED"
+                            WorkInfo.State.SUCCEEDED -> "\n$index - SUCCEEDED"
+                        }
+                else {
+                    tv_work_status.text = "null"
+                }
+
+                tv_work_status.text = cond
+            })
+
+        WorkManager.getInstance(this).getWorkInfosByTagLiveData(PERIODIC_WORKER)
+            .observe(this, Observer { workInfo ->
+                var cond = "Status " + PERIODIC_WORKER
+                if (workInfo != null)
+                    for ((index, data) in workInfo.withIndex())
+                        cond += when (data.state) {
+                            WorkInfo.State.RUNNING -> "\n$index - RUNNING"
+                            WorkInfo.State.ENQUEUED -> "\n$index -  ENQUEUED"
+                            WorkInfo.State.FAILED -> "\n$index - FAILED"
+                            WorkInfo.State.BLOCKED -> "\n$index - BLOCKED"
+                            WorkInfo.State.CANCELLED -> "\n$index - CANCELLED"
+                            WorkInfo.State.SUCCEEDED -> "\n$index - SUCCEEDED"
+                        }
+                else {
+                    tv_work_status_periodic.text = "null"
+                }
+
+                tv_work_status_periodic.text = cond
+            })
+    }
+
+    private fun onClickBtn() {
         btn_one_work.setOnClickListener {
             Log.e("CheckLog", "btn_one_work clicked")
-            mWorkManager = WorkManager.getInstance(this)
+            setCount()
             mWorkManager.beginUniqueWork(
-                NewsWorker.CONST_OUTPUT,
+                WORKER,
                 ExistingWorkPolicy.REPLACE, OneTimeWorkRequest.from(NewsWorker::class.java)
             ).enqueue()
         }
 
         btn_more_work.setOnClickListener {
             Log.e("CheckLog", "btn_more_work clicked")
-            mWorkManager = WorkManager.getInstance(this)
+            setCount()
             var workCon = mWorkManager.beginUniqueWork(
-                NewsWorker.CONST_OUTPUT,
+                WORKER,
                 ExistingWorkPolicy.REPLACE, OneTimeWorkRequest.from(NewsWorker::class.java)
             )
 
@@ -41,9 +106,9 @@ class MainActivity : AppCompatActivity() {
 
         btn_work_network.setOnClickListener {
             Log.e("CheckLog", "btn_work_network clicked")
-            mWorkManager = WorkManager.getInstance(this)
+            setCount()
             mWorkManager.beginUniqueWork(
-                NewsWorker.CONST_OUTPUT,
+                WORKER,
                 ExistingWorkPolicy.REPLACE,
                 OneTimeWorkRequest.Builder(NewsWorker::class.java)
                     .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
@@ -53,21 +118,22 @@ class MainActivity : AppCompatActivity() {
 
         btn_periodic_work.setOnClickListener {
             Log.e("CheckLog", "btn_periodic_work clicked")
-            mWorkManager = WorkManager.getInstance(this)
+            setCount()
             //15 minute minimal, below of 15, make work manager can't run correctly
             val periodicWork =
-                PeriodicWorkRequest.Builder(NewsWorker::class.java, 16, TimeUnit.MINUTES).build()
+                PeriodicWorkRequest.Builder(NewsPeriodicWorker::class.java, 16, TimeUnit.MINUTES)
+                    .addTag(PERIODIC_WORKER).build()
             mWorkManager.enqueue(periodicWork)
         }
 
         /// Available on work manager with 2.1.0 version
         btn_periodic_work_initial_delay.setOnClickListener {
             Log.e("CheckLog", "btn_periodic_work_initial_delay clicked")
-            mWorkManager = WorkManager.getInstance(this)
+            setCount()
             //15 minute minimal, below of 15, make work manager can't run correctly
             val periodicWork =
                 PeriodicWorkRequest.Builder(
-                    NewsWorker::class.java,
+                    NewsPeriodicWorker::class.java,
                     16,
                     TimeUnit.MINUTES
                 ).setInitialDelay(15, TimeUnit.MINUTES).build()

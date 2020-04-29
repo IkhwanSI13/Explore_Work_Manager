@@ -29,13 +29,40 @@ task clean(type: Delete) {
 ext.versions = [:]
 versions.glide = "4.8.0"
 
-// androidx.work:work-runtime:version
-// For android support
-// versions.work = "1.0.0"
+versions.work = "2.3.4"
 
-// For androidx
-// versions.work = "2.0.0"
+// versions.work = "2.4.0" - Alpha
 
+// versions.work = "2.3.4"  - BUG FIXES
+//Fixed a bug which would cause multiple instances of a long running Workers to run, after exceeding the 10 minute execution window. (aosp/1247484, b/150553353)
+//Fix for WorkManager’s lint IssueRegistry. Thank you @ZacSweers from Slack, for the contribution. (aosp/1217923)
+
+// versions.work = "2.3.3"  - BUG FIXES
+//Fixed a bug where if a Worker was interrupted, it would not get rescheduled correctly.
+
+// versions.work = "2.3.2"  - BUG FIXES
+//Fixes an issue where WorkManager exceeds the 100 job limit in JobScheduler in rare cases. (aosp/1226859, b/149092520)
+//Fix for a race condition in ConstraintControllers. (aosp/1220100)
+//Improved the management foreground Service lifecycle for long running Workers. (aosp/1226295)
+//Improved the management of cancellation of Notifications for long running Workers upon Worker cancellation. (aosp/1228346)
+
+
+// versions.work = "2.3.1"  - BUG FIXES
+// Better manage the lifecycle of Notifications for long running Workers that run when a foreground Service is active. (aosp/1218539, b/147249312)
+//WorkManager now depends on androidx.sqlite:sqlite-framework:2.1.0 stable. (aosp/1217729)
+//Added lint rules to ensure that a foregroundServiceType is specified in the AndroidManifest.xml when using foregroundServiceTypes in ForegroundInfo. (aosp/1214207, b/147873061)
+
+// versions.work = "2.3.0"
+// Support for long running or important work via ListenableWorker#setForegroundAsync().
+// Support for Worker Progress via ListenableWorker#setProgressAsync().
+// WorkManager now packages additional lint rules as part of the library which helps catch bugs early.
+
+//////////coba
+
+// androidx.work:work-gcm:2.2.0
+// is a new Maven artifact which supports the use of GCMNetworkManager as a scheduler when Google Play Services is available for API levels <= 22. This is an optional dependency that helps with more reliable and performant background processing on older API versions. If your app uses Google Play Services, add this dependency to your gradle file to automatically get GCMNetworkManager support. If Play Services is not available, WorkManager will continue to fall back to AlarmManager on older devices.
+
+// versions.work = "2.1.0"
 // WorkManager.getInstance() to WorkManager.getInstance(Context)
 // Add setInitialDelay for PeriodicWorkRequest.Builder
 // Added the ability to customize the Executor used by WorkManager for all its internal book-keeping via Configuration.Builder.setTaskExecutor.
@@ -44,8 +71,10 @@ versions.glide = "4.8.0"
 // Added run attempt count to WorkInfo
 // Data types can now store and retrieve bytes and byte arrays. This does NOT change the maximum size of Data objects.
 // WorkManager now depends on Room 2.1.0, which should fix some database issues.
-//versions.work = "2.1.0"
 
-// androidx.work:work-gcm:2.2.0 is a new Maven artifact which supports the use of GCMNetworkManager as a scheduler when Google Play Services is available for API levels <= 22. This is an optional dependency that helps with more reliable and performant background processing on older API versions. If your app uses Google Play Services, add this dependency to your gradle file to automatically get GCMNetworkManager support. If Play Services is not available, WorkManager will continue to fall back to AlarmManager on older devices.
-versions.work = "2.2.0"
+// versions.work = "2.0.0"
+// For androidx
 
+// versions.work = "1.0.0"
+// androidx.work:work-runtime:version
+// For android support

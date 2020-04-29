@@ -6,16 +6,20 @@ import android.util.Log
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.ikhwankoto.sampleworkmanagerretrofit.Preference
 import com.ikhwankoto.sampleworkmanagerretrofit.api.ApiClient
 
-class NewsWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-
-    companion object {
-        var CONST_OUTPUT = "WORK_ACEES_API"
-    }
+class NewsWorker(appContext: Context, workerParams: WorkerParameters) :
+    Worker(appContext, workerParams) {
 
     override fun doWork(): Result {
-        Log.e("CheckLog", "do first work run")
+        Preference().setCountValue(
+            applicationContext,
+            (Preference().getCountValue(applicationContext, Preference.tagCountWork) + 1),
+            Preference.tagCountWork
+        )
+
+        Log.e("CheckLog", "do news work run")
         Thread.sleep(5_000)
         try {
             val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
