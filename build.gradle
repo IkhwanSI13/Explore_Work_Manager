@@ -29,9 +29,23 @@ task clean(type: Delete) {
 ext.versions = [:]
 versions.glide = "4.8.0"
 
-versions.work = "2.3.4"
+versions.work = "2.4.0"
 
-// versions.work = "2.4.0" - Alpha
+// versions.work = "2.4.0"
+//the application can now execute a lot more WorkRequests when the app is in the foreground.
+//Added the ability to request diagnostic information from WorkManager using adb shell am broadcast -a "androidx.work.diagnostics.REQUEST_DIAGNOSTICS" -p "<your_app_package_name>"
+//WorkManager now supports RxJava 3
+//Added the ability to query for WorkInfos by using a WorkQuery
+//Add ExistingWorkPolicy.APPEND_OR_REPLACE which is similar to APPEND, but replaces a chain that has cancelled or failed prerequisites.
+//Provide the ability to add a custom RunnableScheduler to track WorkRequests that need to be executed in the future.
+//Provide the ability to add a custom RunnableScheduler to track WorkRequests that need to be executed in the future. This is used by the in-process Scheduler. (aosp/1203944)
+//Add support for dynamically adding factories to delegate to, when using a DelegatingWorkerFactory. (b/156289105, aosp/1309745)
+//Align tracking for BATTERY_NOT_LOW constraints more closely with the platform. (aosp/1312583)
+//The in-process scheduler now uses better APIs to determine the name of the process. This is useful to better support apps that use multiple-processes. (aosp/1324732)
+//New Lint rules which enforce:
+//Calls to setForegroundAsync() that do not complete before completion of a ListenableWorker will now be signalled via an IllegalStateException on the returned ListenableFuture. (aosp/1262743)
+//Fix a bug where the ForegroundService is not stopped after a foreground Worker is interrupted. (b/155579898, aosp/1302153)
+//Fix a bug where WorkManager attempts to execute multiple instances of a Worker bound to a Foreground Service (b/156310133, aosp/1309853)
 
 // versions.work = "2.3.4"  - BUG FIXES
 //Fixed a bug which would cause multiple instances of a long running Workers to run, after exceeding the 10 minute execution window. (aosp/1247484, b/150553353)

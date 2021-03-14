@@ -28,6 +28,9 @@ class MainActivity : AppCompatActivity() {
     var WORKER = "TAG_NEWS_WORKER"
     var PERIODIC_WORKER = "TAG_PERIODIC_WORKER"
 
+    var PERIODIC_WORKER_UNIQUE1 = "PERIODIC_WORKER_1"
+    var PERIODIC_WORKER_UNIQUE2 = "PERIODIC_WORKER_2"
+
     private lateinit var mWorkManager: WorkManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,7 +126,9 @@ class MainActivity : AppCompatActivity() {
                 WORKER,
                 ExistingWorkPolicy.REPLACE,
                 OneTimeWorkRequest.Builder(NewsWorker::class.java)
-                    .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+                    .setConstraints(
+                        Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+                    )
                     .build()
             ).enqueue()
         }
@@ -135,7 +140,11 @@ class MainActivity : AppCompatActivity() {
             val periodicWork =
                 PeriodicWorkRequest.Builder(NewsPeriodicWorker::class.java, 16, TimeUnit.MINUTES)
                     .addTag(PERIODIC_WORKER).build()
-            mWorkManager.enqueue(periodicWork)
+            mWorkManager.enqueueUniquePeriodicWork(
+                PERIODIC_WORKER_UNIQUE1,
+                ExistingPeriodicWorkPolicy.KEEP,
+                periodicWork
+            )
         }
 
         /// Available on work manager with 2.1.0 version
@@ -149,7 +158,11 @@ class MainActivity : AppCompatActivity() {
                     16,
                     TimeUnit.MINUTES
                 ).setInitialDelay(15, TimeUnit.MINUTES).build()
-            mWorkManager.enqueue(periodicWork)
+            mWorkManager.enqueueUniquePeriodicWork(
+                PERIODIC_WORKER_UNIQUE2,
+                ExistingPeriodicWorkPolicy.KEEP,
+                periodicWork
+            )
         }
     }
 
