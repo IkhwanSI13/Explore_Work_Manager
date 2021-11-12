@@ -21,10 +21,10 @@ class ApiClient {
                 .addInterceptor(httpLoggingInterceptor).build()
 
             val retrofit = Retrofit.Builder()
-                .baseUrl("http://ikhwankoto.com/")
+                .baseUrl("https://www.yukngoding.id/me/")
                 .client(okHttp)
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
             return retrofit.create(ApiInterface::class.java)
         }
