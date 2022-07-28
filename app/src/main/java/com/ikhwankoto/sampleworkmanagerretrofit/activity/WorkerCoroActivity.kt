@@ -12,6 +12,7 @@ import com.ikhwankoto.sampleworkmanagerretrofit.R
 import com.ikhwankoto.sampleworkmanagerretrofit.workers.coroutines.NewsCoro2Worker
 import com.ikhwankoto.sampleworkmanagerretrofit.workers.coroutines.NewsCoroWorker
 import com.ikhwankoto.sampleworkmanagerretrofit.workers.custom.NewsCustomWorker
+import com.ikhwankoto.sampleworkmanagerretrofit.workers.rxJava.NewsRxNewsWorker
 import kotlinx.android.synthetic.main.activity_worker_coro.*
 
 class WorkerCoroActivity : AppCompatActivity() {

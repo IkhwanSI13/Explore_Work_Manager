@@ -21,6 +21,9 @@ interface ApiInterface {
     suspend fun getListDataHewan3(): HewanDao?
 
     @POST("_dev/sample_api_hewan.php")
-    fun getListDataHewan4(): Single<HewanDao>
+    fun getListDataHewan4(): Single<HewanDao?>
+
+    @POST("_dev/sample_api_hewan.php")
+    fun getListDataHewan5(): Observable<HewanDao?>
 
 }
